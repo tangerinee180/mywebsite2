@@ -6,7 +6,9 @@ jupyter: python3
 ## 1. 숙제 Qmd 1. 정규 분포 pdf 값을 계산하는 자신만의 파이썬 함수를 정의하고, 정규분포 mu = 3 , sigma = 2 의 pdf를 그릴 것.
 
 ```{python}
-
+from scipy.stats import norm
+from scipy.stats import binom
+from scipy.stats import bernoulli
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns

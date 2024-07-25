@@ -18,14 +18,14 @@
     "href": "hw3.html",
     "title": "HW3",
     "section": "",
-    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\nnorm.pdf(0,loc = 0,scale = 1)\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\na = norm.rvs(loc =3, scale=2,size=100)\n\na_min,a_max=(a.min(),a.max())\na_lin = np.linspace(a_min,9,100)\n\na_list = [ ]\nfor x in a_lin :\n    a_list.append(my_pdf(x,3,2))\n\nb = np.array(a_list)\nplt.plot(a_lin,a_list)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\n\na_lin = np.linspace(-4,10,1000)\n\na_arr = np.array([])\nfor x in a_lin :\n    a_arr = np.append(a_arr,my_pdf(x,3,2))\n\n\nplt.plot(a_lin,a_arr)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
   },
   {
     "objectID": "hw3.html#숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것.",
     "href": "hw3.html#숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것.",
     "title": "HW3",
     "section": "",
-    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\nnorm.pdf(0,loc = 0,scale = 1)\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\na = norm.rvs(loc =3, scale=2,size=100)\n\na_min,a_max=(a.min(),a.max())\na_lin = np.linspace(a_min,9,100)\n\na_list = [ ]\nfor x in a_lin :\n    a_list.append(my_pdf(x,3,2))\n\nb = np.array(a_list)\nplt.plot(a_lin,a_list)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\n\na_lin = np.linspace(-4,10,1000)\n\na_arr = np.array([])\nfor x in a_lin :\n    a_arr = np.append(a_arr,my_pdf(x,3,2))\n\n\nplt.plot(a_lin,a_arr)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
   },
   {
     "objectID": "hw3.html#파이썬-scipy-패키지-사용해서-다음과-같은-확률을-구하시오.",

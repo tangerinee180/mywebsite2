@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것." class="level2">
 <h2 class="anchored" data-anchor-id="숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것.">1. 숙제 Qmd 1. 정규 분포 pdf 값을 계산하는 자신만의 파이썬 함수를 정의하고, 정규분포 mu = 3 , sigma = 2 의 pdf를 그릴 것.</h2>
-<div id="bb4acbb3" class="cell" data-execution_count="1">
+<div id="f36115f0" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> binom</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> bernoulli</span>
@@ -189,26 +189,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>norm.pdf(<span class="dv">0</span>,loc <span class="op">=</span> <span class="dv">0</span>,scale <span class="op">=</span> <span class="dv">1</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_pdf(x,mu,sigma):</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> math </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">1</span><span class="op">/</span>(sigma<span class="op">*</span>((<span class="dv">2</span><span class="op">*</span>math.pi)<span class="op">**</span><span class="fl">0.5</span>)))<span class="op">*</span> math.exp( ( <span class="op">-</span><span class="fl">0.5</span>) <span class="op">*</span>( ((x<span class="op">-</span>mu)<span class="op">/</span>sigma) <span class="op">**</span><span class="dv">2</span>))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>my_pdf(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_pdf(x,mu,sigma):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> math </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">1</span><span class="op">/</span>(sigma<span class="op">*</span>((<span class="dv">2</span><span class="op">*</span>math.pi)<span class="op">**</span><span class="fl">0.5</span>)))<span class="op">*</span> math.exp( ( <span class="op">-</span><span class="fl">0.5</span>) <span class="op">*</span>( ((x<span class="op">-</span>mu)<span class="op">/</span>sigma) <span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>my_pdf(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> norm.rvs(loc <span class="op">=</span><span class="dv">3</span>, scale<span class="op">=</span><span class="dv">2</span>,size<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>a_lin <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1000</span>)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>a_min,a_max<span class="op">=</span>(a.<span class="bu">min</span>(),a.<span class="bu">max</span>())</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>a_lin <span class="op">=</span> np.linspace(a_min,<span class="dv">9</span>,<span class="dv">100</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>a_list <span class="op">=</span> [ ]</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> a_lin :</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    a_list.append(my_pdf(x,<span class="dv">3</span>,<span class="dv">2</span>))</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array(a_list)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>plt.plot(a_lin,a_list)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>plt.clf()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>a_arr <span class="op">=</span> np.array([])</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> a_lin :</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    a_arr <span class="op">=</span> np.append(a_arr,my_pdf(x,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.plot(a_lin,a_arr)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>plt.clf()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -223,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="파이썬-scipy-패키지-사용해서-다음과-같은-확률을-구하시오." class="level2">
 <h2 class="anchored" data-anchor-id="파이썬-scipy-패키지-사용해서-다음과-같은-확률을-구하시오.">2. 파이썬 scipy 패키지 사용해서 다음과 같은 확률을 구하시오.</h2>
-<div id="f1854760" class="cell" data-execution_count="2">
+<div id="5420dc9c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#X ~ N(2, 3^2)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> </span>
@@ -242,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="ls-빅데이터-스쿨-학생들의-중간고사-점수는-평균이-30이고-분산이-4인-정규분포를-따른다.-상위-5에-해당하는-학생의-점수는" class="level2">
 <h2 class="anchored" data-anchor-id="ls-빅데이터-스쿨-학생들의-중간고사-점수는-평균이-30이고-분산이-4인-정규분포를-따른다.-상위-5에-해당하는-학생의-점수는">3. LS 빅데이터 스쿨 학생들의 중간고사 점수는 평균이 30이고, 분산이 4인 정규분포를 따른다. 상위 5%에 해당하는 학생의 점수는?</h2>
-<div id="c4e5421d" class="cell" data-execution_count="3">
+<div id="ac99d58a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>norm.ppf(<span class="fl">0.95</span>,loc <span class="op">=</span> <span class="dv">30</span>,scale <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>np.float64(33.28970725390295)</code></pre>
