@@ -9,6 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+      - href: hw3.qmd
+        text: hw3
 
 format:
   html:
