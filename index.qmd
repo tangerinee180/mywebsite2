@@ -1,11 +1,9 @@
 ---
-title: "ww"
+title: "두번째 홈페이지"
 jupyter: python3
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+# 제발 멀쩡해주세요
 
 ```{python}
 1 + 1

@@ -13,6 +13,7 @@ from scipy.stats import bernoulli
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 norm.pdf(0,loc = 0,scale = 1)
 def my_pdf(x,mu,sigma):
@@ -24,7 +25,7 @@ my_pdf(0,0,1)
 a = norm.rvs(loc =3, scale=2,size=100)
 
 a_min,a_max=(a.min(),a.max())
-a_lin = np.linspace(a_min,a_max,100)
+a_lin = np.linspace(a_min,9,100)
 
 a_list = [ ]
 for x in a_lin :
