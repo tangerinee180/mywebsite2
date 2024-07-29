@@ -11,6 +11,8 @@ website:
       - about.qmd
       - href: hw3.qmd
         text: hw3
+      - href: hw4.qmd
+        text: hw4
 
 format:
   html:
