@@ -1,0 +1,88 @@
+---
+title: "hw5"
+jupyter: python3
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns    
+import matplotlib.pyplot as plt    
+import math
+from scipy.stats import norm
+raw_welfare = pd.read_spss("Koweps_hpwc14_2019_beta2.sav")
+
+welfare = raw_welfare.copy()
+
+welfare.shape
+welfare.describe()
+
+welfare.rename(columns = {
+        "h14_g3"    : "sex",
+        "h14_g4"    : "birth",
+        "h14_g10"   : "marriage_type",
+        "h14_g11"   : "religion",
+        "p1402_8aq1": "income",
+        "h14_eco9"  : "code_job",
+        "h14_reg7"  : "code_region"},inplace = True)
+
+welfare = welfare[["sex","birth","marriage_type",\
+"religion","income","code_job","code_region"]]
+
+welfare.shape
+
+```
+
+```{python}
+
+welfare["sex"].dtypes
+welfare.loc[0,"sex"] = 2.0
+welfare["sex"].value_counts()
+
+
+
+welfare["sex"] = np.where(welfare["sex"]==1,"male","female")
+welfare["sex"].value_counts()
+
+welfare["income"].describe()
+welfare["income"].isna().sum()
+welfare["income"].sum()
+sex_income = welfare.dropna(subset="income").groupby("sex",as_index=False).agg(mean_income=("income","mean"))
+
+sex_income
+
+sns.barplot(data=sex_income,x="sex",y="mean_income",hue='sex')
+
+plt.show()
+plt.clf()
+
+```
+
+## #숙제: 위 그래프에서 각 성별 95% 신뢰 구간 계산 후 그리기
+
+```{python}
+
+
+
+temp = welfare.dropna(subset="income").groupby("sex",as_index=False).agg(mean_income=("income","mean"),
+                                                                              var_income =("income",'var'),
+                                                                              len_income =("income","count"))
+
+temp["left_ci"]= temp['mean_income'] - norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp["len_income"]))
+temp["right_ci"]= temp['mean_income'] + norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp["len_income"]))
+temp
+
+```
+
+# plt.plot 이용
+
+```{python}
+
+sns.barplot(data=sex_income,x="sex",y="mean_income",hue='sex')
+plt.plot([0, 0], [temp.iloc[0]["left_ci"], temp.iloc[0]["right_ci"]], color='black', linestyle='dashed', linewidth=2)
+plt.plot([1, 1], [temp.iloc[1]["left_ci"], temp.iloc[1]["right_ci"]], color='black', linestyle='dashed', linewidth=2)
+plt.show()
+plt.clf()
+
+
+```
