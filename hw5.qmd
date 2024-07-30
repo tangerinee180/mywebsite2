@@ -72,10 +72,17 @@ temp["left_ci"]= temp['mean_income'] - norm.ppf(0.975,0,1)*np.sqrt(temp['var_inc
 temp["right_ci"]= temp['mean_income'] + norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp["len_income"]))
 temp
 
+```
+
+# plt.plot 이용
+
+```{python}
+
 sns.barplot(data=sex_income,x="sex",y="mean_income",hue='sex')
 plt.plot([0, 0], [temp.iloc[0]["left_ci"], temp.iloc[0]["right_ci"]], color='black', linestyle='dashed', linewidth=2)
 plt.plot([1, 1], [temp.iloc[1]["left_ci"], temp.iloc[1]["right_ci"]], color='black', linestyle='dashed', linewidth=2)
 plt.show()
 plt.clf()
+
 
 ```
