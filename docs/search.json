@@ -54,5 +54,61 @@
     "title": "hw4",
     "section": "",
     "text": "표본 분산 계산 시 왜 n-1로 나누는지 알아보도록 하겠습니다.\n균일분포 (3, 7)에서 20개의 표본을 뽑아서 분산을 2가지 방법으로 추정해보세요.\nn-1로 나눈 것을 s_2, n으로 나눈 것을 k_2로 정의하고, s_2의 분포와 k_2의 분포를 그려주세요! (10000개 사용) 각 분포 그래프에 모분산의 위치에 녹색 막대를 그려주세요. 결과를 살펴보고, 왜 n-1로 나눈 것을 분산을 추정하는 지표로 사용하는 것이 타당한지 써주세요!\n\nimport numpy as np\nfrom scipy.stats import uniform\nimport seaborn as sns\nimport matplotlib.pyplot as plt    \n\n#U~(3,7)\nx = uniform.rvs(loc=3, scale=4, size=200000).reshape(-1, 20)\nx_var = uniform.var(3,4)\nx_mean = x.mean(axis=1)\n\n\ns_2_list = []\nk_2_list = []\n\nfor i in range(10000):\n    row_variance = np.sum((x[i] - x_mean[i])**2)\n    s_2_list.append(row_variance/19)\n    k_2_list.append(row_variance/20)\n\n\nplt.hist(s_2_list, color = \"salmon\")\nplt.axvline(x_var, color=\"green\")\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;\n\n\n\nmo_var = uniform.var(loc=3,scale=4)\nplt.hist(k_2_list, color = \"salmon\")\nplt.axvline(x_var, color=\"red\")\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;\n\n\n\nnp.mean(s_2_list) \n\nnp.float64(1.335165375641702)\n\n\n\nnp.mean(k_2_list)\n\nnp.float64(1.268407106859617)\n\n\n\n그래프 상으론 차이를 잘 모르겠지만 두 결과 값과\n\n\nx_var = uniform.var(3,4)\nx_var\n\nnp.float64(1.3333333333333333)\n\n\n원 함수의 분산 값을 비교해보니 s_2가 값이 더 비슷했다.\n따라서 n-1이 s_2 의 지표로 쓰이는 것이 타당하다."
+  },
+  {
+    "objectID": "hw5.html",
+    "href": "hw5.html",
+    "title": "hw5",
+    "section": "",
+    "text": "import pandas as pd\nimport numpy as np\nimport seaborn as sns    \nimport matplotlib.pyplot as plt    \nimport math\nfrom scipy.stats import norm\nraw_welfare = pd.read_spss(\"Koweps_hpwc14_2019_beta2.sav\")\n\nwelfare = raw_welfare.copy()\n\nwelfare.shape\nwelfare.describe()\n\nwelfare.rename(columns = {\n        \"h14_g3\"    : \"sex\",\n        \"h14_g4\"    : \"birth\",\n        \"h14_g10\"   : \"marriage_type\",\n        \"h14_g11\"   : \"religion\",\n        \"p1402_8aq1\": \"income\",\n        \"h14_eco9\"  : \"code_job\",\n        \"h14_reg7\"  : \"code_region\"},inplace = True)\n\nwelfare = welfare[[\"sex\",\"birth\",\"marriage_type\",\\\n\"religion\",\"income\",\"code_job\",\"code_region\"]]\n\nwelfare.shape\n\n(14418, 7)\nwelfare[\"sex\"].dtypes\nwelfare.loc[0,\"sex\"] = 2.0\nwelfare[\"sex\"].value_counts()\n\n\n\nwelfare[\"sex\"] = np.where(welfare[\"sex\"]==1,\"male\",\"female\")\nwelfare[\"sex\"].value_counts()\n\nwelfare[\"income\"].describe()\nwelfare[\"income\"].isna().sum()\nwelfare[\"income\"].sum()\nsex_income = welfare.dropna(subset=\"income\").groupby(\"sex\",as_index=False).agg(mean_income=(\"income\",\"mean\"))\n\nsex_income\n\nsns.barplot(data=sex_income,x=\"sex\",y=\"mean_income\",hue='sex')\n\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+  },
+  {
+    "objectID": "hw5.html#숙제-위-그래프에서-각-성별-95-신뢰-구간-계산-후-그리기",
+    "href": "hw5.html#숙제-위-그래프에서-각-성별-95-신뢰-구간-계산-후-그리기",
+    "title": "hw5",
+    "section": "#숙제: 위 그래프에서 각 성별 95% 신뢰 구간 계산 후 그리기",
+    "text": "#숙제: 위 그래프에서 각 성별 95% 신뢰 구간 계산 후 그리기\n\ntemp = welfare.dropna(subset=\"income\").groupby(\"sex\",as_index=False).agg(mean_income=(\"income\",\"mean\"),\n                                                                              var_income =(\"income\",'var'),\n                                                                              len_income =(\"income\",\"count\"))\n\ntemp[\"left_ci\"]= temp['mean_income'] - norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp[\"len_income\"]))\ntemp[\"right_ci\"]= temp['mean_income'] + norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp[\"len_income\"]))\ntemp\n\nsns.barplot(data=sex_income,x=\"sex\",y=\"mean_income\",hue='sex')\nplt.plot([0, 0], [temp.iloc[0][\"left_ci\"], temp.iloc[0][\"right_ci\"]], color='black', linestyle='dashed', linewidth=2)\nplt.plot([1, 1], [temp.iloc[1][\"left_ci\"], temp.iloc[1][\"right_ci\"]], color='black', linestyle='dashed', linewidth=2)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+  },
+  {
+    "objectID": "posts/hw4.html",
+    "href": "posts/hw4.html",
+    "title": "hw4",
+    "section": "",
+    "text": "표본 분산 계산 시 왜 n-1로 나누는지 알아보도록 하겠습니다.\n균일분포 (3, 7)에서 20개의 표본을 뽑아서 분산을 2가지 방법으로 추정해보세요.\nn-1로 나눈 것을 s_2, n으로 나눈 것을 k_2로 정의하고, s_2의 분포와 k_2의 분포를 그려주세요! (10000개 사용) 각 분포 그래프에 모분산의 위치에 녹색 막대를 그려주세요. 결과를 살펴보고, 왜 n-1로 나눈 것을 분산을 추정하는 지표로 사용하는 것이 타당한지 써주세요!\n\nimport numpy as np\nfrom scipy.stats import uniform\nimport seaborn as sns\nimport matplotlib.pyplot as plt    \n\n#U~(3,7)\nx = uniform.rvs(loc=3, scale=4, size=200000).reshape(-1, 20)\nx_var = uniform.var(3,4)\nx_mean = x.mean(axis=1)\n\n\ns_2_list = []\nk_2_list = []\n\nfor i in range(10000):\n    row_variance = np.sum((x[i] - x_mean[i])**2)\n    s_2_list.append(row_variance/19)\n    k_2_list.append(row_variance/20)\n\n\nplt.hist(s_2_list, color = \"salmon\")\nplt.axvline(x_var, color=\"green\")\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;\n\n\n\nmo_var = uniform.var(loc=3,scale=4)\nplt.hist(k_2_list, color = \"salmon\")\nplt.axvline(x_var, color=\"red\")\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;\n\n\n\nnp.mean(s_2_list) \n\nnp.float64(1.335074234648122)\n\n\n\nnp.mean(k_2_list)\n\nnp.float64(1.268320522915716)\n\n\n\n그래프 상으론 차이를 잘 모르겠지만 두 결과 값과\n\n\nx_var = uniform.var(3,4)\nx_var\n\nnp.float64(1.3333333333333333)\n\n\n원 함수의 분산 값을 비교해보니 s_2가 값이 더 비슷했다.\n따라서 n-1이 s_2 의 지표로 쓰이는 것이 타당하다."
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "my blog",
+    "section": "",
+    "text": "HW3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhw4\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/hw3.html",
+    "href": "posts/hw3.html",
+    "title": "HW3",
+    "section": "",
+    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\n\na_lin = np.linspace(-4,10,1000)\n\na_arr = np.array([])\nfor x in a_lin :\n    a_arr = np.append(a_arr,my_pdf(x,3,2))\n\n\nplt.plot(a_lin,a_arr)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+  },
+  {
+    "objectID": "posts/hw3.html#숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것.",
+    "href": "posts/hw3.html#숙제-qmd-1.-정규-분포-pdf-값을-계산하는-자신만의-파이썬-함수를-정의하고-정규분포-mu-3-sigma-2-의-pdf를-그릴-것.",
+    "title": "HW3",
+    "section": "",
+    "text": "from scipy.stats import norm\nfrom scipy.stats import binom\nfrom scipy.stats import bernoulli\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport numpy as np\n\ndef my_pdf(x,mu,sigma):\n    import math \n    return (1/(sigma*((2*math.pi)**0.5)))* math.exp( ( -0.5) *( ((x-mu)/sigma) **2))\n\nmy_pdf(0,0,1)\n\n\na_lin = np.linspace(-4,10,1000)\n\na_arr = np.array([])\nfor x in a_lin :\n    a_arr = np.append(a_arr,my_pdf(x,3,2))\n\n\nplt.plot(a_lin,a_arr)\nplt.show()\nplt.clf()\n\n\n\n\n\n\n\n\n&lt;Figure size 672x480 with 0 Axes&gt;"
+  },
+  {
+    "objectID": "posts/hw3.html#파이썬-scipy-패키지-사용해서-다음과-같은-확률을-구하시오.",
+    "href": "posts/hw3.html#파이썬-scipy-패키지-사용해서-다음과-같은-확률을-구하시오.",
+    "title": "HW3",
+    "section": "2. 파이썬 scipy 패키지 사용해서 다음과 같은 확률을 구하시오.",
+    "text": "2. 파이썬 scipy 패키지 사용해서 다음과 같은 확률을 구하시오.\n\n#X ~ N(2, 3^2)\n\n \n# 2-1) P(X &lt; 3)\nnorm.cdf(3,loc = 2,scale = 3)\n\n# 2-2) P(2 &lt; X &lt; 5)\nnorm.cdf(5,loc = 2,scale = 3) - norm.cdf(2,loc = 2,scale = 3)\n\n#2-3) P(X &lt; 3 or X &gt; 7)\n1 - (norm.cdf(7,loc = 2,scale = 3) - norm.cdf(3,loc = 2,scale = 3))\n\nnp.float64(0.678349012091051)"
+  },
+  {
+    "objectID": "posts/hw3.html#ls-빅데이터-스쿨-학생들의-중간고사-점수는-평균이-30이고-분산이-4인-정규분포를-따른다.-상위-5에-해당하는-학생의-점수는",
+    "href": "posts/hw3.html#ls-빅데이터-스쿨-학생들의-중간고사-점수는-평균이-30이고-분산이-4인-정규분포를-따른다.-상위-5에-해당하는-학생의-점수는",
+    "title": "HW3",
+    "section": "3. LS 빅데이터 스쿨 학생들의 중간고사 점수는 평균이 30이고, 분산이 4인 정규분포를 따른다. 상위 5%에 해당하는 학생의 점수는?",
+    "text": "3. LS 빅데이터 스쿨 학생들의 중간고사 점수는 평균이 30이고, 분산이 4인 정규분포를 따른다. 상위 5%에 해당하는 학생의 점수는?\n\nnorm.ppf(0.95,loc = 30,scale = 2)\n\nnp.float64(33.28970725390295)"
   }
 ]
