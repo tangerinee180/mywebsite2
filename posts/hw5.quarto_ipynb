@@ -1,0 +1,135 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"hw5\"\n",
+        "jupyter: python3\n",
+        "---"
+      ],
+      "id": "2ad6df7c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import seaborn as sns    \n",
+        "import matplotlib.pyplot as plt    \n",
+        "import math\n",
+        "from scipy.stats import norm\n",
+        "raw_welfare = pd.read_spss(\"Koweps_hpwc14_2019_beta2.sav\")\n",
+        "\n",
+        "welfare = raw_welfare.copy()\n",
+        "\n",
+        "welfare.shape\n",
+        "welfare.describe()\n",
+        "\n",
+        "welfare.rename(columns = {\n",
+        "        \"h14_g3\"    : \"sex\",\n",
+        "        \"h14_g4\"    : \"birth\",\n",
+        "        \"h14_g10\"   : \"marriage_type\",\n",
+        "        \"h14_g11\"   : \"religion\",\n",
+        "        \"p1402_8aq1\": \"income\",\n",
+        "        \"h14_eco9\"  : \"code_job\",\n",
+        "        \"h14_reg7\"  : \"code_region\"},inplace = True)\n",
+        "\n",
+        "welfare = welfare[[\"sex\",\"birth\",\"marriage_type\",\\\n",
+        "\"religion\",\"income\",\"code_job\",\"code_region\"]]\n",
+        "\n",
+        "welfare.shape"
+      ],
+      "id": "fd19ffb8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "welfare[\"sex\"].dtypes\n",
+        "welfare.loc[0,\"sex\"] = 2.0\n",
+        "welfare[\"sex\"].value_counts()\n",
+        "\n",
+        "\n",
+        "\n",
+        "welfare[\"sex\"] = np.where(welfare[\"sex\"]==1,\"male\",\"female\")\n",
+        "welfare[\"sex\"].value_counts()\n",
+        "\n",
+        "welfare[\"income\"].describe()\n",
+        "welfare[\"income\"].isna().sum()\n",
+        "welfare[\"income\"].sum()\n",
+        "sex_income = welfare.dropna(subset=\"income\").groupby(\"sex\",as_index=False).agg(mean_income=(\"income\",\"mean\"))\n",
+        "\n",
+        "sex_income\n",
+        "\n",
+        "sns.barplot(data=sex_income,x=\"sex\",y=\"mean_income\",hue='sex')\n",
+        "\n",
+        "plt.show()\n",
+        "plt.clf()"
+      ],
+      "id": "3a8f54e1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## #숙제: 위 그래프에서 각 성별 95% 신뢰 구간 계산 후 그리기\n"
+      ],
+      "id": "fa22aecc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "temp = welfare.dropna(subset=\"income\").groupby(\"sex\",as_index=False).agg(mean_income=(\"income\",\"mean\"),\n",
+        "                                                                              var_income =(\"income\",'var'),\n",
+        "                                                                              len_income =(\"income\",\"count\"))\n",
+        "\n",
+        "temp[\"left_ci\"]= temp['mean_income'] - norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp[\"len_income\"]))\n",
+        "temp[\"right_ci\"]= temp['mean_income'] + norm.ppf(0.975,0,1)*np.sqrt(temp['var_income']/(temp[\"len_income\"]))\n",
+        "temp"
+      ],
+      "id": "9072d854",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# plt.plot 이용\n"
+      ],
+      "id": "9f64561c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sns.barplot(data=sex_income,x=\"sex\",y=\"mean_income\",hue='sex')\n",
+        "plt.plot([0, 0], [temp.iloc[0][\"left_ci\"], temp.iloc[0][\"right_ci\"]], color='black', linestyle='dashed', linewidth=2)\n",
+        "plt.plot([1, 1], [temp.iloc[1][\"left_ci\"], temp.iloc[1][\"right_ci\"]], color='black', linestyle='dashed', linewidth=2)\n",
+        "plt.show()\n",
+        "plt.clf()\n"
+      ],
+      "id": "5ab2d61f",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\DS\\python\\Python312\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
